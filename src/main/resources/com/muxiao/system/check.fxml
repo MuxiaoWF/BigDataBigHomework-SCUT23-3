@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.muxiao.system.check">
+   <top>
+      <HBox prefHeight="40.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="backBTN" mnemonicParsing="false" onAction="#backBTNClicked" text="返回">
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </HBox.margin></Button>
+            <ComboBox fx:id="tableNameComboBox" prefWidth="150.0">
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </HBox.margin></ComboBox>
+            <TextField fx:id="require" prefHeight="23.0" prefWidth="236.0" promptText="[格式]:MYSQL的查询条件(留空展示全部)">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </TextField>
+            <Button fx:id="okBTN" mnemonicParsing="false" onAction="#okBTNClicked" text="确定">
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </HBox.margin></Button>
+            <Button fx:id="exportBTN" mnemonicParsing="false" onAction="#exportBTNClicked" text="导出">
+               <HBox.margin>
+                  <Insets right="10.0" top="10.0" />
+               </HBox.margin></Button>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+         <content>
+            <TableView fx:id="tableView" />
+         </content>
+      </ScrollPane>
+   </center>
+   <bottom>
+      <TextField fx:id="result" editable="false" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
