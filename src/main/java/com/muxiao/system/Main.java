@@ -48,9 +48,9 @@ public class Main  extends Application {
         launch(args);
     }
 
-    public static String URL = "jdbc:mysql://localhost:3306/";
-    public static String USER = "root";
-    public static String PASSWORD = "050627";
+    public static String URL;
+    public static String USER;
+    public static String PASSWORD;
     private static final String DATABASE_NAME = "DORMITORY";
 
     public static Connection getConnection() throws SQLException {
