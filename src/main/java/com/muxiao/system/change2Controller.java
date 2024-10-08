@@ -186,7 +186,7 @@ public class change2Controller {
                     rowData.setDormitory_id(rs.getInt("dormitory_id"));
                     rowData.setMove_in_date(rs.getString("move_in_date"));
                     rowData.setMove_out_date(rs.getString("move_out_date"));
-                    column1.setText("学生id");
+                    column1.setText("学号");
                     text1.setText(rowData.getStudent_id());
                     column2.setText("宿舍号");
                     text2.setText(String.valueOf(rowData.getDormitory_id()));
