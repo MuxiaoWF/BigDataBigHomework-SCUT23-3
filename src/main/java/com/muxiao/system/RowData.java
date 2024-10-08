@@ -123,7 +123,7 @@ public class RowData {
         private Integer dormitory_id;
         private String move_in_date;
         private String move_out_date;
-
+        private String name;
         public Integer getResidence_id() {
             return residence_id;
         }
@@ -163,6 +163,14 @@ public class RowData {
         public void setDormitory_id(Integer dormitory_id) {
             this.dormitory_id = dormitory_id;
         }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static class RepairRowData extends RowData {
@@ -172,7 +180,7 @@ public class RowData {
         private String request_date;
         private String description;
         private String status;
-
+        private String name;
         public Integer getRepair_id() {
             return repair_id;
         }
@@ -220,6 +228,14 @@ public class RowData {
         public void setStatus(String status) {
             this.status = status;
         }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static class ViolationRowData extends RowData {
@@ -229,7 +245,7 @@ public class RowData {
         private String date;
         private String type;
         private String details;
-
+        private String name;
         public Integer getViolation_id() {
             return violation_id;
         }
@@ -277,6 +293,14 @@ public class RowData {
         public void setDormitory_id(Integer dormitory_id) {
             this.dormitory_id = dormitory_id;
         }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static class FeeRowData extends RowData {
@@ -285,6 +309,7 @@ public class RowData {
         private String amount;
         private String payment_date;
         private String description;
+        private String name;
 
         public String getFee_id() {
             return fee_id;
@@ -324,6 +349,14 @@ public class RowData {
 
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

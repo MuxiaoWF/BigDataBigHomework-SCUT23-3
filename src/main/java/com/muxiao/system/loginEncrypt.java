@@ -31,6 +31,7 @@ public class loginEncrypt {
         return usernameList;
     }
     public static void register(String username, String password) {
+        usernameList = getUsernameList();
         loginEncrypt.username = username;
         loginEncrypt.password = password;
         String[] users = usernameList.toArray(String[]::new);

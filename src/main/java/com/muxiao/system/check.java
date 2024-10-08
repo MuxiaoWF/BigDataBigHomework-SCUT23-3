@@ -103,6 +103,9 @@ public class check {
                 TableColumn<RowData, String> studentIdCol = new TableColumn<>("学号(student_id)");
                 studentIdCol.setCellValueFactory(new PropertyValueFactory<>("student_id"));
 
+                TableColumn<RowData, String> nameCol = new TableColumn<>("姓名(name)");
+                nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+
                 TableColumn<RowData, Integer> dormitoryIdCol = new TableColumn<>("宿舍id(dormitory_id)");
                 dormitoryIdCol.setCellValueFactory(new PropertyValueFactory<>("dormitory_id"));
 
@@ -113,7 +116,7 @@ public class check {
                 TableColumn<RowData, String> moveOutDateCol = new TableColumn<>("退住日期(move_out_date)");
                 moveOutDateCol.setCellValueFactory(new PropertyValueFactory<>("move_out_date"));
 
-                tableView.getColumns().addAll(residenceIdCol, studentIdCol, dormitoryIdCol, moveInDateCol, moveOutDateCol);
+                tableView.getColumns().addAll(residenceIdCol, studentIdCol, nameCol,dormitoryIdCol, moveInDateCol, moveOutDateCol);
             }
             case "repairs" -> {
                 TableColumn<RowData, Integer> repairIdCol = new TableColumn<>("序号(repair_id)");
@@ -121,6 +124,9 @@ public class check {
 
                 TableColumn<RowData, String> studentIdCol = new TableColumn<>("学号(student_id)");
                 studentIdCol.setCellValueFactory(new PropertyValueFactory<>("student_id"));
+
+                TableColumn<RowData, String> nameCol = new TableColumn<>("姓名(name)");
+                nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
                 TableColumn<RowData, Integer> dormitoryIdCol = new TableColumn<>("宿舍id(dormitory_id)");
                 dormitoryIdCol.setCellValueFactory(new PropertyValueFactory<>("dormitory_id"));
@@ -133,7 +139,7 @@ public class check {
 
                 TableColumn<RowData, String> statusCol = new TableColumn<>("状态(status)");
                 statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-                tableView.getColumns().addAll(repairIdCol, studentIdCol, dormitoryIdCol, requestDateCol, descriptionCol, statusCol);
+                tableView.getColumns().addAll(repairIdCol, studentIdCol, nameCol,dormitoryIdCol, requestDateCol, descriptionCol, statusCol);
             }
             case "violations" -> {
                 TableColumn<RowData, Integer> violationIdCol = new TableColumn<>("序号(violation_id)");
@@ -141,6 +147,9 @@ public class check {
 
                 TableColumn<RowData, String> studentIdCol = new TableColumn<>("学号(student_id)");
                 studentIdCol.setCellValueFactory(new PropertyValueFactory<>("student_id"));
+
+                TableColumn<RowData, String> nameCol = new TableColumn<>("姓名(name)");
+                nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
                 TableColumn<RowData, Integer> dormitoryIdCol = new TableColumn<>("宿舍id(dormitory_id)");
                 dormitoryIdCol.setCellValueFactory(new PropertyValueFactory<>("dormitory_id"));
@@ -154,7 +163,7 @@ public class check {
                 TableColumn<RowData, String> detailsCol = new TableColumn<>("详细描述(details)");
                 detailsCol.setCellValueFactory(new PropertyValueFactory<>("details"));
 
-                tableView.getColumns().addAll(violationIdCol, studentIdCol, dormitoryIdCol, dateCol, typeCol, detailsCol);
+                tableView.getColumns().addAll(violationIdCol, studentIdCol, nameCol,dormitoryIdCol, dateCol, typeCol, detailsCol);
             }
             case "fees" -> {
                 TableColumn<RowData, Integer> feeIdCol = new TableColumn<>("序号(fee_id)");
@@ -162,6 +171,9 @@ public class check {
 
                 TableColumn<RowData, String> studentIdCol = new TableColumn<>("学号(student_id)");
                 studentIdCol.setCellValueFactory(new PropertyValueFactory<>("student_id"));
+
+                TableColumn<RowData, String> nameCol = new TableColumn<>("姓名(name)");
+                nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
                 TableColumn<RowData, Integer> amountCol = new TableColumn<>("金额(amount)");
                 amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -172,7 +184,7 @@ public class check {
                 TableColumn<RowData, String> descriptionCol = new TableColumn<>("描述(description)");
                 descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-                tableView.getColumns().addAll(feeIdCol, studentIdCol, amountCol, paymentDateCol);
+                tableView.getColumns().addAll(feeIdCol, studentIdCol, nameCol,amountCol, paymentDateCol);
             }
         }
     }
@@ -180,21 +192,41 @@ public class check {
     public static void populateTable(String tableName, ObservableList<RowData> data, TableView<RowData> tableView, String text) {
         try (Connection connection = Main.getConnection()) {
             ResultSet rs;
-            if (Objects.equals(text, "")) {
-                String query = "SELECT * FROM " + tableName;
-                Statement stmt = connection.createStatement();
-                rs = stmt.executeQuery(query);
-            } else {
-                try {
-                    String query = "SELECT * FROM " + tableName + " WHERE " + text;
+            if (tableName.equals("students")|| tableName.equals("dormitories")) {
+                if (Objects.equals(text, "")) {
+                    String query = "SELECT * FROM " + tableName;
                     Statement stmt = connection.createStatement();
                     rs = stmt.executeQuery(query);
-                    temp = true;
-                } catch (Exception e) {
-                    errorPage.create("查询语句出错\n" + e.getMessage());
-                    new errorPage().launchErrorPage();
-                    temp = false;
-                    return;
+                } else {
+                    try {
+                        String query = "SELECT * FROM " + tableName + " WHERE " + text;
+                        Statement stmt = connection.createStatement();
+                        rs = stmt.executeQuery(query);
+                        temp = true;
+                    } catch (Exception e) {
+                        errorPage.create("查询语句出错\n" + e.getMessage());
+                        new errorPage().launchErrorPage();
+                        temp = false;
+                        return;
+                    }
+                }
+            }else{
+                if (Objects.equals(text, "")) {
+                    String query =  "SELECT r.*, s.name name FROM "+tableName+" r,students s where r.student_id = s.student_id";
+                    Statement stmt = connection.createStatement();
+                    rs = stmt.executeQuery(query);
+                } else {
+                    try {
+                        String query = "SELECT r.*, s.name name FROM "+tableName+" r,students s where r.student_id = s.student_id and" + text;
+                        Statement stmt = connection.createStatement();
+                        rs = stmt.executeQuery(query);
+                        temp = true;
+                    } catch (Exception e) {
+                        errorPage.create("查询语句出错\n" + e.getMessage());
+                        new errorPage().launchErrorPage();
+                        temp = false;
+                        return;
+                    }
                 }
             }
             switch (tableName) {
@@ -210,6 +242,7 @@ public class check {
                         rowData.setEmail(rs.getString("email"));
                         data.add(rowData);
                     }
+                    break;
                 case "dormitories":
                     while (rs.next()) {
                         RowData.DormitoryRowData rowData = new RowData.DormitoryRowData();
@@ -220,48 +253,57 @@ public class check {
                         rowData.setStatus(rs.getString("status"));
                         data.add(rowData);
                     }
+                    break;
                 case "residences":
                     while (rs.next()) {
                         RowData.ResidenceRowData rowData = new RowData.ResidenceRowData();
                         rowData.setResidence_id(rs.getInt("residence_id"));
                         rowData.setStudent_id(rs.getString("student_id"));
+                        rowData.setName(rs.getString("name"));
                         rowData.setDormitory_id(rs.getInt("dormitory_id"));
                         rowData.setMove_in_date(rs.getString("move_in_date"));
                         rowData.setMove_out_date(rs.getString("move_out_date"));
                         data.add(rowData);
                     }
+                    break;
                 case "repairs":
                     while (rs.next()) {
                         RowData.RepairRowData rowData = new RowData.RepairRowData();
                         rowData.setRepair_id(rs.getInt("repair_id"));
                         rowData.setStudent_id(rs.getString("student_id"));
+                        rowData.setName(rs.getString("name"));
                         rowData.setDormitory_id(rs.getInt("dormitory_id"));
                         rowData.setRequest_date(rs.getString("request_date"));
                         rowData.setDescription(rs.getString("description"));
                         rowData.setStatus(rs.getString("status"));
                         data.add(rowData);
                     }
+                    break;
                 case "violations":
                     while (rs.next()) {
                         RowData.ViolationRowData rowData = new RowData.ViolationRowData();
                         rowData.setViolation_id(rs.getInt("violation_id"));
                         rowData.setStudent_id(rs.getString("student_id"));
+                        rowData.setName(rs.getString("name"));
                         rowData.setDormitory_id(rs.getInt("dormitory_id"));
                         rowData.setDate(rs.getString("date"));
                         rowData.setType(rs.getString("type"));
                         rowData.setDetails(rs.getString("details"));
                         data.add(rowData);
                     }
+                    break;
                 case "fees":
                     while (rs.next()) {
                         RowData.FeeRowData rowData = new RowData.FeeRowData();
                         rowData.setFee_id(rs.getString("fee_id"));
                         rowData.setStudent_id(rs.getString("student_id"));
+                        rowData.setName(rs.getString("name"));
                         rowData.setAmount(rs.getString("amount"));
                         rowData.setPayment_date(rs.getString("payment_date"));
                         rowData.setDescription(rs.getString("description"));
                         data.add(rowData);
                     }
+                    break;
             }
             tableView.setItems(data);
         } catch (Exception e) {
