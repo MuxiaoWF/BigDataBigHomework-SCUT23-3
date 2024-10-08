@@ -54,8 +54,8 @@ public class export {
             // 构建 mysqldump 命令
             String[] cmd = {
                     "mysqldump",
-                    "-u"+"root",  // 替换为实际的用户名
-                    "-p"+"050628",   // 替换为实际的密码
+                    "-u"+Main.USER,  // 替换为实际的用户名
+                    "-p"+Main.PASSWORD,   // 替换为实际的密码
                     "--result-file=" + PATH+"dormitory.sql",
                     "dormitory"
             };

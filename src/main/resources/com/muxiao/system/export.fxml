@@ -21,7 +21,7 @@
     <RowConstraints maxHeight="83.0" minHeight="10.0" prefHeight="62.5" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TextArea fx:id="result" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextArea fx:id="result" editable="false" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Button fx:id="backBTN" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#backBTNClicked" text="返回" GridPane.halignment="LEFT" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets left="30.0" top="30.0" />
