@@ -74,5 +74,6 @@ public class setDB {
     @FXML
     public void initialize() {
         URL.setText("jdbc:mysql://localhost:3306/");
+        username.setText("root");
     }
 }
