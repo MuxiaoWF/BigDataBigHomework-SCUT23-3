@@ -1,6 +1,5 @@
 package com.muxiao.system;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,20 +16,20 @@ public class start {
     @FXML
     public Button check;
     @FXML
-    public void CheckBTNClick(ActionEvent event) throws IOException {
+    public void CheckBTNClick() throws IOException {
         com.muxiao.system.check.FromPage = "start.fxml";
         FXMLLoader loader = new FXMLLoader(getClass().getResource("check.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = check.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
     @FXML
-    public void LoginBTNClick(ActionEvent event) throws IOException {
+    public void LoginBTNClick() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = login.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
-    @FXML
-    private void initialize() {}
 }

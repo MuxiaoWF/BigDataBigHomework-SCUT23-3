@@ -50,7 +50,8 @@ public class delete {
     public void backBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("control.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = backBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 

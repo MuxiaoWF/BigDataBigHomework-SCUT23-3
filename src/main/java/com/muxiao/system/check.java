@@ -2,13 +2,13 @@ package com.muxiao.system;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -313,23 +313,25 @@ public class check {
     }
 
     @FXML
-    public void backBTNClicked(ActionEvent event) throws IOException {
+    public void backBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(FromPage));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = backBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 
     @FXML
-    public void exportBTNClicked(ActionEvent event) throws IOException {
+    public void exportBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("export.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = exportBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 
     @FXML
-    public void okBTNClicked(ActionEvent event) {
+    public void okBTNClicked() {
         String tableName = switchTableName(tableNameComboBox.getValue());
         ObservableList<RowData> data = FXCollections.observableArrayList();
         // 设置表格列名
@@ -346,5 +348,10 @@ public class check {
     public void initialize() {
         tableNameComboBox.setItems(FXCollections.observableArrayList("学生信息", "宿舍信息", "入住信息", "维修信息", "费用信息", "违规信息"));
         tableNameComboBox.setValue("学生信息");
+        require.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                okBTNClicked();
+            }
+        });
     }
 }

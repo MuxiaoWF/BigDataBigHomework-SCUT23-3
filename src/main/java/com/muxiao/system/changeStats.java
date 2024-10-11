@@ -2,12 +2,12 @@ package com.muxiao.system;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,15 +39,26 @@ public class changeStats {
     private Map<String, String> columnTypeMap;
 
     @FXML
-    public void backBTNClicked(ActionEvent event) throws IOException {
+    public void backBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("control.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = backBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 
     @FXML
-    public void okBTNClicked(ActionEvent event) {
+    public void okBTNClicked() {
+        if (text.getText().isEmpty()) {
+            result.setText("请输入修改后的数据类型");
+            return;
+        }else if (text.getText().toLowerCase().contains("int")&&stats.getText().toLowerCase().contains("char")) {
+            result.setText("类型转换失败，不能从int转为char");
+            return;
+        }else if(text.getText().toLowerCase().contains("char")&&stats.getText().toLowerCase().contains("int")){
+            result.setText("类型转换失败，不能从char转为int");
+            return;
+        }
         String sql = "alter table " + tableName + " modify column " + list.getSelectionModel().getSelectedItem() + " " + text.getText() + " ;";
         try (Connection connection = Main.getConnection();
              Statement statement =connection.createStatement()){
@@ -67,6 +78,11 @@ public class changeStats {
         tableNameComboBox.setItems(FXCollections.observableArrayList("学生信息", "宿舍信息", "入住信息", "维修信息", "费用信息", "违规信息"));
         tableNameComboBoxChanged();
         tableNameComboBox.setValue("学生信息");
+        text.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                okBTNClicked();
+            }
+        });
     }
 
     private void tableNameComboBoxChanged() {
@@ -130,8 +146,6 @@ public class changeStats {
     }
 
     private void listNameChanged() {
-        list.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            stats.setText(columnTypeMap.get(newValue));
-        });
+        list.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> stats.setText(columnTypeMap.get(newValue)));
     }
 }

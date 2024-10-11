@@ -1,21 +1,19 @@
 package com.muxiao.system;
 
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.Objects;
 
 public class add {
     private final Stage primaryStage = Main.primaryStage;
@@ -58,15 +56,16 @@ public class add {
     private String tableName;
 
     @FXML
-    private void backBTNClicked(ActionEvent event) throws IOException {
+    private void backBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("control.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = backBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 
     @FXML
-    private void okBTNClicked(ActionEvent event) {
+    private void okBTNClicked() {
         try (Connection connection = Main.getConnection();
              Statement stmt = connection.createStatement()) {
             String sql = switch (tableName) {
@@ -144,7 +143,8 @@ public class add {
             result.setText("添加失败\n" + e.getMessage());
         }
     }
-    private void cleanText(){
+
+    private void cleanText() {
         text1.clear();
         text2.clear();
         text3.clear();
@@ -153,6 +153,7 @@ public class add {
         text6.clear();
         text7.clear();
     }
+
     private void tableNameComboBoxChanged() {
         // 设置监听器以响应选项变化
         tableNameComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -281,5 +282,26 @@ public class add {
         tableNameComboBox.setItems(FXCollections.observableArrayList("学生信息", "宿舍信息", "入住信息", "维修信息", "费用信息", "违规信息"));
         tableNameComboBoxChanged();
         tableNameComboBox.setValue("学生信息");
+        TextFieldFocusManager.setupKeyPressHandlers(text1, text2, text3, text4, text5, text6, text7);
+        text7.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                okBTNClicked();
+            }
+        });
+    }
+
+    public static class TextFieldFocusManager {
+        public static void setupKeyPressHandlers(TextField... textFields) {
+            for (int i = 0; i < textFields.length; i++) {
+                final int index = i;
+                textFields[i].setOnKeyPressed(e -> {
+                    if (e.getCode().equals(KeyCode.ENTER)) {
+                        if (index + 1 < textFields.length) {
+                            textFields[index + 1].requestFocus();
+                        }
+                    }
+                });
+            }
+        }
     }
 }

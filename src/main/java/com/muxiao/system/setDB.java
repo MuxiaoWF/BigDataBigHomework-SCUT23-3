@@ -67,7 +67,8 @@ public class setDB {
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("start.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = okBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 

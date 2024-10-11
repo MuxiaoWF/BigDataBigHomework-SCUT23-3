@@ -1,6 +1,5 @@
 package com.muxiao.system;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,14 +26,15 @@ public class export {
     @FXML
     private Button exportSQLBTN;
     @FXML
-    private void exportSQLBTNClicked(ActionEvent event){
+    private void exportSQLBTNClicked(){
         result.setText(DataBase());
     }
     @FXML
-    public void backBTNClicked(ActionEvent event) throws IOException {
+    public void backBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("check.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = backBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
     @FXML

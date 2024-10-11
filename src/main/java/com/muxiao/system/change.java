@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -51,13 +52,19 @@ public class change {
                 changed.set(false);
             }
         });
+        require.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                okBTNClicked();
+            }
+        });
     }
 
     @FXML
     public void backBTNClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("control.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root);
+        Scene scene = backBTN.getScene();
+        scene.setRoot(root);
         primaryStage.setScene(scene);
     }
 
