@@ -27,16 +27,16 @@ public class setDB {
     private TextField result;
     @FXML
     private Button okBTN;
-
+    public static final String PATH = loginEncrypt.basic.desktopPath + "\\宿舍管理系统\\path";
     @FXML
     public void okBTNClicked() throws IOException {
         String url = URL.getText();
         String username = this.username.getText();
         String password = this.password.getText();
         try {
-            Main.writeBinaryData(loginEncrypt.ReversibleEncryption.encrypt(url + ";;" + username + ";;" + password));
-            String s = loginEncrypt.ReversibleEncryption.decrypt(Main.readBinaryData());
-            String[] strings = s.split(";;");
+            Main.writeBinaryData(PATH,loginEncrypt.ReversibleEncryption.encrypt(url + ";_OwO_;" + username + ";_OwO_;" + password));
+            String s = loginEncrypt.ReversibleEncryption.decrypt(Main.readBinaryData(PATH));
+            String[] strings = s.split(";_OwO_;");
             Main.URL = strings[0];
             Main.USER = strings[1];
             Main.PASSWORD = strings[2];
@@ -45,21 +45,24 @@ public class setDB {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(Main.TableCreator::createTables);
             connection.close();
+            loginEncrypt.register(username, password);
             result.setText("设置成功");
+            Main.USER = "MuxiaoWF";
+            Main.PASSWORD = "";
         } catch (IOException e) {
-            File file = new File(Main.PATH);
+            File file = new File(PATH);
             if (file.exists())
                 file.delete();
             result.setText("设置失败！(写入文件失败)");
             return;
         } catch (SQLException e) {
-            File file = new File(Main.PATH);
+            File file = new File(PATH);
             if (file.exists())
                 file.delete();
             result.setText("设置失败！(数据库连接失败)");
             return;
         } catch (Exception e) {
-            File file = new File(Main.PATH);
+            File file = new File(PATH);
             if (file.exists())
                 file.delete();
             result.setText("设置失败！(未知错误)");

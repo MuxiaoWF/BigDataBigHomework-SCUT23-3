@@ -35,7 +35,7 @@
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </Button>
-                 <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="61.0" prefWidth="120.0" text="宿舍管理系统" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                 <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" prefHeight="61.0" prefWidth="120.0" text="宿舍管理系统" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
                          <Font name="System Bold" size="18.0" />
                      </font>

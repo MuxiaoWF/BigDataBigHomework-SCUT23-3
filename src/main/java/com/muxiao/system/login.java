@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -13,7 +14,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class login {
+    public static boolean isAdmin = false;
     private final Stage primaryStage = Main.primaryStage;
+    private final Stage stage = loginAdmin.stage;
     @FXML
     public Button okBTN;
     @FXML
@@ -24,19 +27,15 @@ public class login {
     private Button backBTN;
     @FXML
     private Button registerBTN;
+    @FXML
+    private Label title;
 
     @FXML
     public void registerBTNClick() {
-        if (!userText.getText().isEmpty() && !passwordText.getText().isEmpty()) {
-            try {
-                loginEncrypt.register(userText.getText(), passwordText.getText());
-            } catch (RuntimeException e) {
-                return;
-            }
-            successPage.create("注册成功");
-            new successPage().launchSuccessPage();
-        } else {
-            errorPage.create("请输入用户名或密码！");
+        try {
+            new loginAdmin().start(new Stage());
+        } catch (Exception e) {
+            errorPage.create("注册页面出错\n" + e);
             new errorPage().launchErrorPage();
         }
     }
@@ -52,8 +51,15 @@ public class login {
 
     @FXML
     public void okBTNClick() {
-        if (!loginEncrypt.login(userText.getText(), passwordText.getText())) {
-            return;
+        if (!isAdmin) {
+            if (!loginEncrypt.login(userText.getText(), passwordText.getText())) {
+                return;
+            }
+        } else {
+            if (!loginEncrypt.loginAdmin(userText.getText(), passwordText.getText())) {
+                return;
+            }
+            stage.close();
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("control.fxml"));
         Parent root = null;
@@ -81,5 +87,11 @@ public class login {
                 okBTNClick();
             }
         });
+        if (isAdmin) {
+            registerBTN.setVisible(false);
+            title.setText("管理员登录");
+            userText.setPromptText("管理员用户名");
+            passwordText.setPromptText("管理员密码");
+        }
     }
 }

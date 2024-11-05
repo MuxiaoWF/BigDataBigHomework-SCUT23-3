@@ -24,12 +24,25 @@ public class control {
     @FXML
     private Button checkBTN;
     @FXML
+    private Button adminBTN;
+    @FXML
+    private void adminBTNClicked() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("admin.fxml"));
+        Parent root = loader.load();
+        Scene scene = adminBTN.getScene();
+        scene.setRoot(root);
+        primaryStage.setScene(scene);
+    }
+    @FXML
     public void backBTNClicked() throws IOException {
+        login.isAdmin = false;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
         Parent root = loader.load();
         Scene scene = backBTN.getScene();
         scene.setRoot(root);
         primaryStage.setScene(scene);
+        Main.USER = "MuxiaoWF";
+        Main.PASSWORD = "";
     }
     @FXML
     private void addBTNClicked() throws IOException{
@@ -71,5 +84,9 @@ public class control {
         Scene scene = checkBTN.getScene();
         scene.setRoot(root);
         primaryStage.setScene(scene);
+    }
+    @FXML
+    private void initialize(){
+        adminBTN.setVisible(login.isAdmin);
     }
 }

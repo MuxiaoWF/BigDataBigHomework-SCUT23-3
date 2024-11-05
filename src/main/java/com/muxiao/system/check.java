@@ -40,10 +40,10 @@ public class check {
         switch (tableName) {
             case "学生信息" -> tableName = "students";
             case "宿舍信息" -> tableName = "dormitories";
-            case "入住信息" -> tableName = "residences";
-            case "维修信息" -> tableName = "repairs";
-            case "费用信息" -> tableName = "fees";
-            case "违规信息" -> tableName = "violations";
+            case "入住信息" -> tableName = "residences_v";
+            case "维修信息" -> tableName = "repairs_v";
+            case "费用信息" -> tableName = "fees_v";
+            case "违规信息" -> tableName = "violations_v";
             default -> throw new IllegalArgumentException("Invalid table name: " + tableName);
         }
         return tableName;
@@ -96,7 +96,7 @@ public class check {
 
                 tableView.getColumns().addAll(dormitoryIdCol, buildingNameCol, roomNumberCol, capacityCol, statusCol);
             }
-            case "residences" -> {
+            case "residences_v" -> {
                 TableColumn<RowData, Integer> residenceIdCol = new TableColumn<>("序号(residence_id)");
                 residenceIdCol.setCellValueFactory(new PropertyValueFactory<>("residence_id"));
 
@@ -118,7 +118,7 @@ public class check {
 
                 tableView.getColumns().addAll(residenceIdCol, studentIdCol, nameCol,dormitoryIdCol, moveInDateCol, moveOutDateCol);
             }
-            case "repairs" -> {
+            case "repairs_v" -> {
                 TableColumn<RowData, Integer> repairIdCol = new TableColumn<>("序号(repair_id)");
                 repairIdCol.setCellValueFactory(new PropertyValueFactory<>("repair_id"));
 
@@ -141,7 +141,7 @@ public class check {
                 statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
                 tableView.getColumns().addAll(repairIdCol, studentIdCol, nameCol,dormitoryIdCol, requestDateCol, descriptionCol, statusCol);
             }
-            case "violations" -> {
+            case "violations_v" -> {
                 TableColumn<RowData, Integer> violationIdCol = new TableColumn<>("序号(violation_id)");
                 violationIdCol.setCellValueFactory(new PropertyValueFactory<>("violation_id"));
 
@@ -165,7 +165,7 @@ public class check {
 
                 tableView.getColumns().addAll(violationIdCol, studentIdCol, nameCol,dormitoryIdCol, dateCol, typeCol, detailsCol);
             }
-            case "fees" -> {
+            case "fees_v" -> {
                 TableColumn<RowData, Integer> feeIdCol = new TableColumn<>("序号(fee_id)");
                 feeIdCol.setCellValueFactory(new PropertyValueFactory<>("fee_id"));
 
@@ -212,12 +212,12 @@ public class check {
                 }
             }else{
                 if (Objects.equals(text, "")) {
-                    String query =  "SELECT r.*, s.name name FROM "+tableName+" r,students s where r.student_id = s.student_id";
+                    String query =  "SELECT * FROM "+tableName;
                     Statement stmt = connection.createStatement();
                     rs = stmt.executeQuery(query);
                 } else {
                     try {
-                        String query = "SELECT r.*, s.name name FROM "+tableName+" r,students s where r.student_id = s.student_id and" + text;
+                        String query = "SELECT * FROM "+tableName+" where " + text;
                         Statement stmt = connection.createStatement();
                         rs = stmt.executeQuery(query);
                         temp = true;
@@ -254,7 +254,7 @@ public class check {
                         data.add(rowData);
                     }
                     break;
-                case "residences":
+                case "residences_v":
                     while (rs.next()) {
                         RowData.ResidenceRowData rowData = new RowData.ResidenceRowData();
                         rowData.setResidence_id(rs.getInt("residence_id"));
@@ -266,7 +266,7 @@ public class check {
                         data.add(rowData);
                     }
                     break;
-                case "repairs":
+                case "repairs_v":
                     while (rs.next()) {
                         RowData.RepairRowData rowData = new RowData.RepairRowData();
                         rowData.setRepair_id(rs.getInt("repair_id"));
@@ -279,7 +279,7 @@ public class check {
                         data.add(rowData);
                     }
                     break;
-                case "violations":
+                case "violations_v":
                     while (rs.next()) {
                         RowData.ViolationRowData rowData = new RowData.ViolationRowData();
                         rowData.setViolation_id(rs.getInt("violation_id"));
@@ -292,7 +292,7 @@ public class check {
                         data.add(rowData);
                     }
                     break;
-                case "fees":
+                case "fees_v":
                     while (rs.next()) {
                         RowData.FeeRowData rowData = new RowData.FeeRowData();
                         rowData.setFee_id(rs.getString("fee_id"));

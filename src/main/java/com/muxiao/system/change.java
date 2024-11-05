@@ -84,22 +84,22 @@ public class change {
             case "入住信息":
                 RowData.ResidenceRowData id3 = (RowData.ResidenceRowData) tableView.getSelectionModel().getSelectedItem();
                 change2Controller.id = String.valueOf(id3.getResidence_id());
-                change2Controller.tableName = "residents";
+                change2Controller.tableName = "residents_v";
                 break;
             case "维修信息":
                 RowData.RepairRowData id4 = (RowData.RepairRowData) tableView.getSelectionModel().getSelectedItem();
                 change2Controller.id = String.valueOf(id4.getRepair_id());
-                change2Controller.tableName = "repairs";
+                change2Controller.tableName = "repairs_v";
                 break;
             case "费用信息":
                 RowData.FeeRowData id5 = (RowData.FeeRowData) tableView.getSelectionModel().getSelectedItem();
                 change2Controller.id = id5.getFee_id();
-                change2Controller.tableName = "fees";
+                change2Controller.tableName = "fees_v";
                 break;
             case "违规信息":
                 RowData.ViolationRowData id6 = (RowData.ViolationRowData) tableView.getSelectionModel().getSelectedItem();
                 change2Controller.id = String.valueOf(id6.getViolation_id());
-                change2Controller.tableName = "violations";
+                change2Controller.tableName = "violations_v";
                 break;
             default:
                 result.setText("请选择要修改的");

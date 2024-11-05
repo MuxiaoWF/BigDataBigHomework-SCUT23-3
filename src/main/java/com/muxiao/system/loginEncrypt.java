@@ -1,9 +1,8 @@
 package com.muxiao.system;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -13,62 +12,119 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static com.muxiao.system.Main.readBinaryData;
+
 public class loginEncrypt {
+    private static final String PATH = basic.desktopPath + "\\宿舍管理系统\\user";
+    public static String inputUsername;
     private static String username;
     private static String password;
-    private static final String PATH = basic.desktopPath + "\\宿舍管理系统\\user.txt";
-    public static String inputUsername;
     private static ArrayList<String> usernameList = getUsernameList();
+    private static int turnTime = 3;
+
     private static ArrayList<String> getUsernameList() {
         ArrayList<String> usernameList = new ArrayList<>();
-        String[] strArr = basic.readText(PATH);
-        for (int i = 0; i < strArr.length; i++) {
-            if (i % 2 == 1) {
-                username = strArr[i - 1];
-                usernameList.add(basic.decrypt(username));
+        String[] strArr = null;
+        if(!new File(PATH).exists())
+            return usernameList;
+        try {
+            strArr = readBinaryData(PATH).split("\n");
+        } catch (IOException e) {
+            errorPage.create("用户文件出错！（尝试手动删除user文件）" + e);
+            new errorPage().launchErrorPage();
+        } catch (NullPointerException e) {
+            return usernameList;
+        }
+        if (strArr != null) {
+            for (int i = 0; i < strArr.length; i++) {
+                if (i % 2 == 1) {
+                    username = strArr[i - 1];
+                    usernameList.add(basic.decrypt(username));
+                }
             }
         }
         return usernameList;
     }
+
     public static void register(String username, String password) {
         usernameList = getUsernameList();
         loginEncrypt.username = username;
         loginEncrypt.password = password;
         String[] users = usernameList.toArray(String[]::new);
-        if(basic.check_same(users, username))
+        if (basic.check_same(users, username))
             throw new RuntimeException("用户名重复");
-        password = basic.encrypt_SHA256(username+password);
+        password = basic.encrypt_SHA256(username + password);
         username = basic.encrypt(username);
         try {
-            basic.write(PATH, username);
+            Main.writeBinaryData(PATH, username + "\n" + password + "\n");
         } catch (IOException e) {
-            throw new RuntimeException("ERROR:写入文件失败！请关闭所有有关的文件（user.txt, xlsx等）");
-        }
-        try {
-            basic.write(PATH, password);
-        } catch (IOException e) {
-            throw new RuntimeException("ERROR:写入文件失败！请关闭所有有关的文件（user.txt, xlsx等）");
+            throw new RuntimeException("ERROR:写入文件失败！请关闭所有有关的文件（user, xlsx等）" + e);
+        } catch (NullPointerException ignored) {
         }
     }
-    private static int turnTime = 3;
-    public static boolean login(String inputUsername, String inputPassword) {
-        if(inputUsername.isEmpty()){
+
+    public static boolean loginAdmin(String inputUsername, String inputPassword) {
+        if (inputUsername.isEmpty()) {
             errorPage.create("输入用户名！");
             new errorPage().launchErrorPage();
             return false;
-        }else if(inputPassword.isEmpty()){
+        } else if (inputPassword.isEmpty()) {
             errorPage.create("输入密码！");
             new errorPage().launchErrorPage();
             return false;
         }
-        String[] strArr = basic.readText(PATH);
+        String s = null;
+        try {
+            s = ReversibleEncryption.decrypt(readBinaryData(Main.PATH));
+        } catch (Exception e) {
+            errorPage.create("获取管理员用户名和密码出错！");
+            new errorPage().launchErrorPage();
+        }
+        String[] strings = s.split(";_OwO_;");
+        if (inputPassword.equals(strings[2]) && inputUsername.equals(strings[1])) {
+            Main.USER = strings[1];
+            Main.PASSWORD = strings[2];
+            turnTime = 3;
+            return true;
+        } else {
+            turnTime = turnTime - 1;
+            errorPage.create("用户名或密码错误\n你还有"+turnTime+"次机会");
+            new errorPage().launchErrorPage();
+            if (turnTime == 0) {
+                loginAdmin.stage.close();
+                login.isAdmin = false;
+                turnTime = 3;
+            }
+            return false;
+        }
+    }
+
+    public static boolean login(String inputUsername, String inputPassword) {
+        if (inputUsername.isEmpty()) {
+            errorPage.create("输入用户名！");
+            new errorPage().launchErrorPage();
+            return false;
+        } else if (inputPassword.isEmpty()) {
+            errorPage.create("输入密码！");
+            new errorPage().launchErrorPage();
+            return false;
+        }
+        String[] strArr = null;
+        try {
+            strArr = readBinaryData(PATH).split("\n");
+        } catch (IOException e) {
+            errorPage.create("用户文件出错！(尝试手动删除user文件)");
+            new errorPage().launchErrorPage();
+        }
         usernameList = getUsernameList();
         // 创建个ArrayList
         ArrayList<String> passwordList = new ArrayList<>();
-        for (int i = 0; i < strArr.length; i++) {
-            if (i % 2 == 1) {
-                password = strArr[i];
-                passwordList.add(password);
+        if (strArr != null) {
+            for (int i = 0; i < strArr.length; i++) {
+                if (i % 2 == 1) {
+                    password = strArr[i];
+                    passwordList.add(password);
+                }
             }
         }
         int result = 3;
@@ -79,9 +135,21 @@ public class loginEncrypt {
             return false;
         }
         for (int i = 0; i < usernameList.size(); i++) {
-            if (inputUsername.equals(usernameList.get(i))&&
-                    basic.decrypt_SHA256(inputUsername+inputPassword, passwordList.get(i))) {
+            if (inputUsername.equals(usernameList.get(i)) &&
+                    basic.decrypt_SHA256(inputUsername + inputPassword, passwordList.get(i))) {
+                Main.USER = inputUsername + "_muxiao";
+                Main.PASSWORD = inputPassword;
+                try {
+                    if(inputUsername.equals(ReversibleEncryption.decrypt(readBinaryData(Main.PATH)).split(";_OwO_;")[1])){
+                        login.isAdmin = true;
+                        Main.USER = inputUsername;
+                    }
+                } catch (Exception e) {
+                    errorPage.create("出错！"+e);
+                    new errorPage().launchErrorPage();
+                }
                 result = 1;
+                turnTime = 3;
                 break;
             } else if (turnTime == 1) {
                 result = 0;
@@ -95,31 +163,19 @@ public class loginEncrypt {
             errorPage.create("用户名或密码错误\n" + "You have " + (turnTime - 1) + " attempts left.");
             new errorPage().launchErrorPage();
             turnTime = turnTime - 1;
-            System.out.println();
             return false;
-        }else {
+        } else {
             errorPage.create("你已经没有机会了！");
             new errorPage().launchErrorPage();
             Main.primaryStage.close();
             return false;
         }
     }
+
     public static class basic {
         //写入文件
         public static final Path desktopPath = getDesktopPath();
-        public static void write(String filename, String text) throws IOException {
-            //新建文件夹
-            File file = new File(filename);
-            File path = new File(file.getParent());
-            if (!path.exists()) {
-                if (!path.mkdirs()) {
-                    throw new RuntimeException("ERROR:创建文件夹  " + path+" 失败");
-                }
-            }
-            try (FileWriter writer = new FileWriter(filename, true)) {
-                writer.write(text + "\n");
-            }
-        }
+
         private static Path getDesktopPath() {
             String osName = System.getProperty("os.name").toLowerCase();
             if (osName.contains("windows")) {
@@ -137,37 +193,7 @@ public class loginEncrypt {
                 throw new RuntimeException("Unsupported operating system: " + osName);
             }
         }
-        public static void file_exist(String filename) throws IOException {
-            if (!new File(filename).exists()) {
-                write(filename, "\n");
-            }
-        }
-        //按每行读取文件
-        public static String [] readText(String filename) {
-            boolean temp = true;
-            while (temp){
-                try {
-                    file_exist(filename);
-                    temp = false;
-                } catch (IOException e) {
-                    throw new RuntimeException("ERROR:读取  " + filename +"文件失败！请先自行检查是否有问题");
-                }
-            }
 
-            temp = true;
-            String str = "";
-            while (temp){
-                try (FileReader reader = new FileReader(filename)) {
-                    char[] buffer = new char[2048];
-                    int len = reader.read(buffer);
-                    str = new String(buffer, 0, len);
-                    temp = false;
-                } catch (IOException e) {
-                    throw new RuntimeException("ERROR: 读取  " + filename +"文件失败！请先自行检查是否有问题");
-                }
-            }
-            return str.split("\n");
-        }
         //单个替换字符，指定位置
         public static String replaceCharAtPosition(String text, int position, char replacementChar) {
             if (position >= 0 && position < text.length()) {
@@ -178,6 +204,7 @@ public class loginEncrypt {
                 throw new IndexOutOfBoundsException("ERROR: 系统错误，无法正常替换");
             }
         }
+
         //解密方法
         public static String decrypt(String text) {
             int num = text.length();
@@ -197,12 +224,13 @@ public class loginEncrypt {
 
             for (int i = 0; i < joinedWords.length(); i++) {
                 char c = joinedWords.charAt(i);
-                int decryptText = 158 - (int) c ;
-                joinedWords = replaceCharAtPosition(joinedWords,i, (char) decryptText);
+                int decryptText = 158 - (int) c;
+                joinedWords = replaceCharAtPosition(joinedWords, i, (char) decryptText);
             }
             return joinedWords;
         }
-        public static String encrypt_SHA256(String input)  {
+
+        public static String encrypt_SHA256(String input) {
             MessageDigest sha256;
             try {
                 sha256 = MessageDigest.getInstance("SHA-256");
@@ -228,7 +256,8 @@ public class loginEncrypt {
             input = encrypt_SHA256(input);
             return input.equals(hash);
         }
-        public static boolean check_same(String[] items_arr,String add_items) {
+
+        public static boolean check_same(String[] items_arr, String add_items) {
             Set<String> set = new HashSet<>();
             set.add(add_items);
             if (items_arr != null) {
@@ -242,13 +271,14 @@ public class loginEncrypt {
             }
             return false;
         }
+
         public static String encrypt(String text) {
             int num = text.length();
             char[] char_list = text.toCharArray();
             ArrayList<String> words = new ArrayList<>();
             for (int i = 0; i < num; i++) {
                 words.add(String.valueOf(char_list[i]));
-                words.add(String.valueOf((char)((int)(Math.random() *95 + 32))));
+                words.add(String.valueOf((char) ((int) (Math.random() * 95 + 32))));
             }
 
             StringBuilder string = new StringBuilder();
@@ -259,12 +289,13 @@ public class loginEncrypt {
 
             for (int i = 0; i < joinedWords.length(); i++) {
                 char c = joinedWords.charAt(i);
-                int encryptText = 158 - (int) c ;
-                joinedWords = replaceCharAtPosition(joinedWords,i, (char) encryptText);  //不能直接replace因为44会循环一次就变成jj
+                int encryptText = 158 - (int) c;
+                joinedWords = replaceCharAtPosition(joinedWords, i, (char) encryptText);  //不能直接replace因为44会循环一次就变成jj
             }
             return joinedWords;
         }
     }
+
     public static class ReversibleEncryption {
 
         private static final String ALGORITHM = "AES";
@@ -284,17 +315,6 @@ public class loginEncrypt {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
             return new String(decryptedData);
-        }
-
-        public static void main(String[] args) throws Exception {
-            String originalData = "Hello, World!";
-            System.out.println("原始数据：" + originalData);
-
-            String encryptedData = encrypt(originalData);
-            System.out.println("加密后的数据：" + encryptedData);
-
-            String decryptedData = decrypt(encryptedData);
-            System.out.println("解密后的数据：" + decryptedData);
         }
     }
 }
