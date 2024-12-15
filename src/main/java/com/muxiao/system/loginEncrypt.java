@@ -25,7 +25,7 @@ public class loginEncrypt {
     private static ArrayList<String> getUsernameList() {
         ArrayList<String> usernameList = new ArrayList<>();
         String[] strArr = null;
-        if(!new File(PATH).exists())
+        if (!new File(PATH).exists())
             return usernameList;
         try {
             strArr = readBinaryData(PATH).split("\n");
@@ -46,17 +46,62 @@ public class loginEncrypt {
         return usernameList;
     }
 
+    public static void deleteUser(String username) {
+        usernameList = getUsernameList();
+        List<String> passwordList = getPasswordList();
+        String[] users = usernameList.toArray(String[]::new);
+        if (basic.check_same(users, username,false)) {
+            int index = Arrays.asList(users).indexOf(username);
+            usernameList.remove(index);
+            passwordList.remove(index);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < usernameList.size(); i++) {
+                sb.append(basic.encrypt(usernameList.get(i))).append("\n");
+                sb.append(basic.encrypt(passwordList.get(i))).append("\n");
+            }
+            try {
+                Main.writeBinaryData(PATH, sb.toString(), false);
+            } catch (IOException e) {
+                errorPage.create("ERROR:写入文件失败！请关闭所有有关的文件（user, xlsx等）" + e);
+                new errorPage().launchErrorPage();
+            }
+        }
+    }
+
+    private static List<String> getPasswordList() {
+        List<String> passwordList = new ArrayList<>();
+        String[] strArr = null;
+        if (!new File(PATH).exists())
+            return passwordList;
+        try {
+            strArr = readBinaryData(PATH).split("\n");
+        } catch (IOException e) {
+            errorPage.create("用户文件出错！（尝试手动删除user文件）" + e);
+            new errorPage().launchErrorPage();
+        } catch (NullPointerException e) {
+            return passwordList;
+        }
+        if (strArr != null) {
+            for (int i = 0; i < strArr.length; i++) {
+                if (i % 2 == 0) {
+                    passwordList.add(strArr[i + 1]);
+                }
+            }
+        }
+        return passwordList;
+    }
+
     public static void register(String username, String password) {
         usernameList = getUsernameList();
         loginEncrypt.username = username;
         loginEncrypt.password = password;
         String[] users = usernameList.toArray(String[]::new);
-        if (basic.check_same(users, username))
+        if (basic.check_same(users, username,true))
             throw new RuntimeException("用户名重复");
         password = basic.encrypt_SHA256(username + password);
         username = basic.encrypt(username);
         try {
-            Main.writeBinaryData(PATH, username + "\n" + password + "\n");
+            Main.writeBinaryData(PATH, username + "\n" + password + "\n", true);
         } catch (IOException e) {
             throw new RuntimeException("ERROR:写入文件失败！请关闭所有有关的文件（user, xlsx等）" + e);
         } catch (NullPointerException ignored) {
@@ -88,7 +133,7 @@ public class loginEncrypt {
             return true;
         } else {
             turnTime = turnTime - 1;
-            errorPage.create("用户名或密码错误\n你还有"+turnTime+"次机会");
+            errorPage.create("用户名或密码错误\n你还有" + turnTime + "次机会");
             new errorPage().launchErrorPage();
             if (turnTime == 0) {
                 loginAdmin.stage.close();
@@ -140,12 +185,12 @@ public class loginEncrypt {
                 Main.USER = inputUsername + "_muxiao";
                 Main.PASSWORD = inputPassword;
                 try {
-                    if(inputUsername.equals(ReversibleEncryption.decrypt(readBinaryData(Main.PATH)).split(";_OwO_;")[1])){
+                    if (inputUsername.equals(ReversibleEncryption.decrypt(readBinaryData(Main.PATH)).split(";_OwO_;")[1])) {
                         login.isAdmin = true;
                         Main.USER = inputUsername;
                     }
                 } catch (Exception e) {
-                    errorPage.create("出错！"+e);
+                    errorPage.create("出错！" + e);
                     new errorPage().launchErrorPage();
                 }
                 result = 1;
@@ -257,16 +302,17 @@ public class loginEncrypt {
             return input.equals(hash);
         }
 
-        public static boolean check_same(String[] items_arr, String add_items) {
+        public static boolean check_same(String[] items_arr, String add_items, boolean b) {
             Set<String> set = new HashSet<>();
             set.add(add_items);
             if (items_arr != null) {
                 for (String s : items_arr) {
-                    if (!set.add(s)) {
+                    if (!set.add(s) && b) {
                         errorPage.create("存在重复的名称：" + s);
                         new errorPage().launchErrorPage();
                         return true;
-                    }
+                    } else if (!set.add(s) && !b)
+                        return true;
                 }
             }
             return false;

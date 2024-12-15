@@ -39,18 +39,17 @@ public class Main extends Application {
         }
     }
 
-    public static void writeBinaryData(String PATH, String text) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(PATH, true);
+    public static void writeBinaryData(String PATH, String text, boolean append) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(PATH, append);
              DataOutputStream dos = new DataOutputStream(fos)) {
-
             // 写入字符串长度
             byte[] stringBytes = text.getBytes(StandardCharsets.UTF_8);
             dos.writeInt(stringBytes.length);
-
             // 写入字符串
             dos.write(stringBytes);
         }
     }
+
 
     public static String readBinaryData(String PATH) throws IOException {
         List<String> result = new ArrayList<>();
@@ -136,6 +135,14 @@ public class Main extends Application {
             executorService.submit(TableCreator::createTables);
             try (Connection connection = getConnection()){
                 TableCreator.createUser(connection);
+            }catch (SQLException e) {
+                errorPage.create("数据库无法连接！（检查数据库开启状态）"+e);
+                new errorPage().launchErrorPage();
+                loader = new FXMLLoader(getClass().getResource("setDB.fxml"));
+                root = loader.load();
+                primaryStage.setTitle("宿舍管理系统");
+                primaryStage.setScene(new Scene(root, 600, 400));
+                primaryStage.show();
             }
             USER = "MuxiaoWF";
             PASSWORD = "";
@@ -147,6 +154,9 @@ public class Main extends Application {
                         if (rs.getString("user").contains("_muxiao"))
                             stmt.executeQuery("drop user '" + rs.getString("user") + "'");
                     }
+                }catch (SQLException e){
+                    errorPage.create("程序出错哦！检查user是否被删除（若删除path一起删了）"+e);
+                    new errorPage().launchErrorPage();
                 }
             }
         } else {

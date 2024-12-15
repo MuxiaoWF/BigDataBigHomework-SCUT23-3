@@ -48,6 +48,7 @@ public class admin {
         try (Statement statement = Main.getConnection().createStatement()) {
             String sql = "drop user '" + userList.getValue() + "_muxiao'@'%';";
             statement.execute(sql);
+            loginEncrypt.deleteUser(userList.getValue());
         } catch (SQLException e) {
             errorPage.create("删除失败\n" + e);
             new errorPage().launchErrorPage();

@@ -1,6 +1,9 @@
 # MySQL JDBC 宿舍管理系统
+
+（可能的bug（TODO）：用户名和密码对不上，暂时可删除user和path文件解决；导入功能不太对🤔；导入的提示窗口全为success）
 - 可以去release 下载，解压后直接运行即可。
 - 运行前请先确保计算机上有MySQL数据库或其他数据库。
+
 ## 项目描述
 
 本项目为大数据课程作业，旨在通过 Java 与 MySQL 数据库交互实现宿舍管理功能。
@@ -23,7 +26,9 @@
 # 数据库结构
 
 ## 表格设计
+
 [具体构建可看此类（代码）](https://github.com/MuxiaoWF/BigDataBigHomework-SCUT23-3/blob/f79554f43d19f21d518672fd126c8a7fc4c1edb7/src/main/java/com/muxiao/system/Main.java#L94)
+
 1. students (学生信息)
 
 - student_id (CHAR, 主键): 学号
@@ -99,13 +104,15 @@
 
 ![3.png](pic/3.png)
 
-- 同时可以导出为excel文件或直接为sql文件： ——运用apache poi提供excel支持
+- 同时可以导出为excel文件或直接为sql文件、以支持的html和xml文件： ——运用apache poi提供excel支持
 
 ![4.png](pic/4.png)
 
 - 导出的文件会放在桌面的一个叫宿舍管理系统的文件夹内，因此建议直接将解压后的文件夹放在桌面。
 
 ![5.png](pic/5.png)
+
+![13.png](pic/13.png)
 
 ### 登录界面：
 
@@ -121,6 +128,10 @@
 - 登录成功后，可以进行增删改查操作：
 
 ![8.png](pic/8.png)
+
+### 导入记录：
+
+- 导入记录时，仅支持本软件备份的文件，同时需要delete和insert权限
 
 ### 增加记录：
 
@@ -157,5 +168,7 @@
 
 - path：保存了加密后的数据库地址，用户名，密码
 - dormitory.sql：你选择导出的sql文件
+- dormitory.xml: 你选择导出的xml文件
+- dormitory.html：你选择导出的html文件
 - （导出的）数据库原始文件.xlsx：你选择导出的excel文件
 - user：保存了此程序注册的用户名以及密码（加密后）
