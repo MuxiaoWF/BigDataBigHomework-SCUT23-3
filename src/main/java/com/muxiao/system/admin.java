@@ -91,9 +91,7 @@ public class admin {
                 statement.execute(sql);
                 statement.execute(grant);
                 loginEncrypt.register(user.getText(), password.getText());
-            } catch (RuntimeException e) {
-                return;
-            } catch (SQLException e) {
+            } catch (RuntimeException | SQLException e) {
                 errorPage.create("注册失败\n" + e);
                 new errorPage().launchErrorPage();
                 return;

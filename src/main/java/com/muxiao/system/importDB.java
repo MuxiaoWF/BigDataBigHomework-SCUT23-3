@@ -92,11 +92,9 @@ public class importDB {
     public static String importExcel(String path) {
         try (FileInputStream fis = new FileInputStream(path);
              Workbook workbook = new XSSFWorkbook(fis)) {
-
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
                 String tableName = sheet.getSheetName();
-
                 try (Connection conn = Main.getConnection()) {
                     Statement stmt = conn.createStatement();
                     ResultSet rs = stmt.executeQuery("SHOW COLUMNS FROM " + tableName);
@@ -104,13 +102,10 @@ public class importDB {
                     while (rs.next()) {
                         columnNames.add(rs.getString("Field"));
                     }
-
                     for (Row row : sheet) {
                         if (row.getRowNum() == 0) continue; // 跳过表头
-
                         StringBuilder insertQuery = new StringBuilder("INSERT INTO " + tableName + " (");
                         StringBuilder values = new StringBuilder("VALUES (");
-
                         for (int j = 0; j < columnNames.size(); j++) {
                             String columnName = columnNames.get(j);
                             String columnValue = row.getCell(j).getStringCellValue();
@@ -118,10 +113,8 @@ public class importDB {
                             insertQuery.append(columnName).append(",");
                             values.append("'").append(columnValue).append("',");
                         }
-
                         insertQuery.deleteCharAt(insertQuery.length() - 1).append(")");
                         values.deleteCharAt(values.length() - 1).append(")");
-
                         String query = insertQuery + " " + values;
                         stmt.executeUpdate(query);
                     }
@@ -137,27 +130,21 @@ public class importDB {
         try (Connection conn = Main.getConnection()) {
             File file = new File(path);
             Reader reader = new FileReader(file);
-
             HTMLEditorKit htmlKit = new HTMLEditorKit();
             HTMLDocument document = (HTMLDocument) htmlKit.createDefaultDocument();
             new ParserDelegator().parse(reader, new HTMLDocumentParser(document), true);
-
             HTMLDocumentParser parser = new HTMLDocumentParser(document);
             parser.parse();
-
             List<String> tableNames = new ArrayList<>(parser.getTableNames());
             List<List<String>> columnNamesList = new ArrayList<>(parser.getColumnNamesList());
             List<List<List<String>>> dataLists = new ArrayList<>(parser.getDataLists());
-
             for (int i = 0; i < tableNames.size(); i++) {
                 String tableName = tableNames.get(i);
                 List<String> columnNames = columnNamesList.get(i);
                 List<List<String>> data = dataLists.get(i);
-
                 for (List<String> row : data) {
                     StringBuilder insertQuery = new StringBuilder("INSERT INTO " + tableName + " (");
                     StringBuilder values = new StringBuilder("VALUES (");
-
                     for (int j = 0; j < columnNames.size(); j++) {
                         String columnName = columnNames.get(j);
                         String columnValue = row.get(j);
@@ -165,17 +152,14 @@ public class importDB {
                         insertQuery.append(columnName).append(",");
                         values.append("'").append(columnValue).append("',");
                     }
-
                     insertQuery.deleteCharAt(insertQuery.length() - 1).append(")");
                     values.deleteCharAt(values.length() - 1).append(")");
-
                     String query = insertQuery + " " + values;
                     try (Statement stmt = conn.createStatement()) {
                         stmt.executeUpdate(query);
                     }
                 }
             }
-
             return "HTML 文件导入成功";
         } catch (Exception e) {
             return "导入错误\n" + e.getMessage();
@@ -211,7 +195,6 @@ public class importDB {
                                     Element valueElement = (Element) valueNode;
                                     String columnName = valueElement.getAttribute("name");
                                     String columnValue = valueElement.getTextContent();
-
                                     insertQuery.append(columnName).append(",");
                                     values.append("'").append(columnValue).append("',");
                                 }

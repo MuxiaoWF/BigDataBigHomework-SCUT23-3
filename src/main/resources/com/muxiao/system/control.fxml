@@ -24,27 +24,27 @@
           <Insets left="10.0" top="10.0" />
         </GridPane.margin>
     </Button>
-    <Button fx:id="addBTN" alignment="CENTER" mnemonicParsing="false" onAction="#addBTNClicked" text="添加记录" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+    <Button fx:id="addBTN" alignment="CENTER" mnemonicParsing="false" onAction="#addBTNClicked" text="添加记录" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" visible="false">
         <font>
           <Font size="18.0" />
         </font>
     </Button>
-    <Button fx:id="changeStatsBTN" alignment="CENTER" mnemonicParsing="false" onAction="#changeStatsBTNClicked" text="修改列约束" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+    <Button fx:id="changeStatsBTN" alignment="CENTER" mnemonicParsing="false" onAction="#changeStatsBTNClicked" text="修改列约束" GridPane.columnIndex="2" GridPane.halignment="CENTER" visible="false" GridPane.rowIndex="1" GridPane.valignment="CENTER">
         <font>
           <Font size="18.0" />
         </font>
     </Button>
-    <Button fx:id="changeBTN" alignment="CENTER" mnemonicParsing="false" onAction="#changeBTNClicked" text="修改值" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+    <Button fx:id="changeBTN" alignment="CENTER" mnemonicParsing="false" onAction="#changeBTNClicked" text="修改值" GridPane.columnIndex="1" GridPane.halignment="CENTER" visible="false" GridPane.rowIndex="1" GridPane.valignment="CENTER">
         <font>
           <Font size="18.0" />
         </font>
     </Button>
-    <Button fx:id="deleteBTN" alignment="CENTER" mnemonicParsing="false" onAction="#deleteBTNClicked" text="删除记录" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+    <Button fx:id="deleteBTN" alignment="CENTER" mnemonicParsing="false" onAction="#deleteBTNClicked" text="删除记录" GridPane.halignment="CENTER" visible="false" GridPane.rowIndex="2" GridPane.valignment="CENTER">
         <font>
           <Font size="18.0" />
         </font>
     </Button>
-    <Button fx:id="checkBTN" alignment="CENTER" mnemonicParsing="false" onAction="#checkBTNClicked" text="查询" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+    <Button fx:id="checkBTN" alignment="CENTER" mnemonicParsing="false" onAction="#checkBTNClicked" text="查询" GridPane.columnIndex="1" GridPane.halignment="CENTER" visible="false" GridPane.rowIndex="2" GridPane.valignment="CENTER">
         <font>
           <Font size="18.0" />
         </font>
@@ -54,12 +54,12 @@
           <Font name="Microsoft YaHei Bold" size="24.0" />
         </font>
     </TextField>
-    <Button fx:id="adminBTN" alignment="CENTER" mnemonicParsing="false" onAction="#adminBTNClicked" text="注册新用户" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+    <Button fx:id="adminBTN" alignment="CENTER" mnemonicParsing="false" onAction="#adminBTNClicked" text="注册新用户" GridPane.columnIndex="2" GridPane.halignment="CENTER" visible="false" GridPane.rowIndex="2">
         <font>
           <Font size="18.0" />
         </font>
     </Button>
-   <Button fx:id="importFileBTN" alignment="CENTER" mnemonicParsing="false" onAction="#importFileBTNClicked" text="导入（此软件备份）" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+   <Button fx:id="importFileBTN" alignment="CENTER" mnemonicParsing="false" onAction="#importFileBTNClicked" text="导入（此软件备份）" GridPane.columnIndex="2" GridPane.halignment="CENTER" visible="false" GridPane.valignment="CENTER">
       <font>
          <Font size="18.0" />
       </font>

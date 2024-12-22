@@ -1,6 +1,6 @@
 # MySQL JDBC 宿舍管理系统
 
-（可能的bug（TODO）：用户名和密码对不上，暂时可删除user和path文件解决；导入功能不太对🤔；导入的提示窗口全为success）
+（可能的bug（TODO）：user文件没鬼用；导入功能不太对🤔；导入的提示窗口全为success）
 - 可以去release 下载，解压后直接运行即可。
 - 运行前请先确保计算机上有MySQL数据库或其他数据库。
 
@@ -50,16 +50,16 @@
 3. residences (入住记录)
 
 - residence_id (INT, 主键, 自增): 入住记录ID
-- student_id (CHAR, 外键): 学号
-- dormitory_id (INT, 外键): 宿舍ID
+- student_id (CHAR, students外键): 学号
+- dormitory_id (INT, dormitories外键): 宿舍ID
 - move_in_date (DATE): 入住日期
 - move_out_date (DATE, 可为空): 退宿日期
 
 4. repairs (维修请求)
 
 - repair_id (INT, 主键, 自增): 维修请求ID
-- student_id (CHAR, 外键): 学号
-- dormitory_id (INT, 外键): 宿舍ID
+- student_id (CHAR, students外键): 学号
+- dormitory_id (INT, dormitories外键): 宿舍ID
 - request_date (DATE): 请求日期
 - description (TEXT): 描述
 - status (ENUM('pending', 'in_progress', 'completed')): 状态（待处理/处理中/已完成）
@@ -67,8 +67,8 @@
 5. violations (违规记录)
 
 - violation_id (INT, 主键, 自增): 违规记录ID
-- student_id (CHAR, 外键): 学号
-- dormitory_id (INT, 外键): 宿舍ID
+- student_id (CHAR, students外键): 学号
+- dormitory_id (INT, dormitories外键): 宿舍ID
 - date (DATE): 记录日期
 - type (VARCHAR): 违规类型
 - details (TEXT): 详细描述
@@ -76,7 +76,7 @@
 6. fees (费用记录)
 
 - fee_id (INT, 主键, 自增): 费用记录ID
-- student_id (CHAR, 外键): 学号
+- student_id (CHAR, students外键): 学号
 - amount (DECIMAL): 金额
 - payment_date (DATE): 缴费日期
 - description (VARCHAR): 费用描述
@@ -128,6 +128,10 @@
 - 登录成功后，可以进行增删改查操作：
 
 ![8.png](pic/8.png)
+
+- 在没有授权的情况下，需要该权限的功能会不再显示出来，下图是只有select的结果
+
+![14.png](pic/14.png)
 
 ### 导入记录：
 

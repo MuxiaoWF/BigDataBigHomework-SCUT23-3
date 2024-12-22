@@ -10,7 +10,10 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.*;
+import java.util.Objects;
 
+import static com.muxiao.system.Main.readBinaryData;
 import static com.muxiao.system.importDB.*;
 
 public class control {
@@ -31,6 +34,20 @@ public class control {
     private Button adminBTN;
     @FXML
     private Button importFileBTN;
+
+    private static boolean hasPermission(Connection conn, String userName, String type) throws SQLException {
+        String query = "SELECT " + type + "_priv FROM mysql.db WHERE User = ? AND Db = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userName);
+            pstmt.setString(2, "dormitory");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return "Y".equals(rs.getString(type + "_priv"));
+                }
+            }
+        }
+        return false;
+    }
 
     @FXML
     private void importFileBTNClicked() {
@@ -139,8 +156,42 @@ public class control {
         primaryStage.setScene(scene);
     }
 
+    private Connection getAdminConnection() throws SQLException {
+        String s = null;
+        try {
+            s = loginEncrypt.ReversibleEncryption.decrypt(readBinaryData(Main.PATH));
+        } catch (Exception e) {
+            errorPage.create("获取管理员用户名和密码出错！");
+            new errorPage().launchErrorPage();
+        }
+        String[] strings = Objects.requireNonNull(s).split(";_OwO_;");
+        return DriverManager.getConnection(strings[0] + "dormitory", strings[1], strings[2]);
+    }
+
     @FXML
     private void initialize() {
         adminBTN.setVisible(login.isAdmin);
+        try (Connection conn = getAdminConnection()) {
+            if (hasPermission(conn, Main.USER, "Update") || login.isAdmin) {
+                addBTN.setVisible(true);
+                changeBTN.setVisible(true);
+                deleteBTN.setVisible(true);
+                changeStatsBTN.setVisible(true);
+                if (hasPermission(conn, Main.USER, "Delete") || login.isAdmin)
+                    importFileBTN.setVisible(true);
+            }
+            if (hasPermission(conn, Main.USER, "Insert") || login.isAdmin) {
+                addBTN.setVisible(true);
+            }
+            if (hasPermission(conn, Main.USER, "Select") || login.isAdmin) {
+                checkBTN.setVisible(true);
+            }
+        } catch (SQLException e) {
+            errorPage.create("数据库权限检查出错: " + e.getMessage());
+            new errorPage().launchErrorPage();
+        } catch (Exception e) {
+            errorPage.create("获取用户出错: " + e.getMessage());
+            new errorPage().launchErrorPage();
+        }
     }
 }

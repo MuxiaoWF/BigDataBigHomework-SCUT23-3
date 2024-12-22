@@ -22,8 +22,6 @@ public class add {
     @FXML
     private Button backBTN;
     @FXML
-    private Button okBTN;
-    @FXML
     private TextField text1;
     @FXML
     private TextField text2;
@@ -161,11 +159,11 @@ public class add {
             switch (newValue) {
                 case "学生信息":
                     column1.setText("学号");
-                    text1.setPromptText("12位学号");
+                    text1.setPromptText("12位学号[not null]");
                     column2.setText("姓名");
-                    text2.setPromptText("学生姓名");
+                    text2.setPromptText("学生姓名[not null]");
                     column3.setText("性别");
-                    text3.setPromptText("男或女");
+                    text3.setPromptText("男或女[not null]");
                     column4.setText("专业");
                     text4.setPromptText("专业名称");
                     column5.setVisible(true);
@@ -184,17 +182,17 @@ public class add {
                     break;
                 case "宿舍信息":
                     column1.setText("宿舍id");
-                    text1.setPromptText("建议楼号+宿舍（07215）");
+                    text1.setPromptText("建议楼号+宿舍（07215）[not null]");
                     column2.setText("楼号");
-                    text2.setPromptText("c7");
+                    text2.setPromptText("c7[not null]");
                     column3.setText("房间号");
-                    text3.setPromptText("房间号");
+                    text3.setPromptText("房间号[not null]");
                     column4.setText("床位数");
-                    text4.setPromptText("床位数");
+                    text4.setPromptText("床位数[not null]");
                     column5.setVisible(true);
                     column5.setText("房间状态");
                     text5.setVisible(true);
-                    text5.setPromptText("占用或空");
+                    text5.setPromptText("占用或空[not null]");
                     column6.setVisible(false);
                     text6.setVisible(false);
                     column7.setVisible(false);
@@ -203,17 +201,17 @@ public class add {
                     break;
                 case "维修信息":
                     column1.setText("学号");
-                    text1.setPromptText("12位学号");
+                    text1.setPromptText("12位学号[not null]");
                     column2.setText("宿舍id");
-                    text2.setPromptText("【自设】楼号+宿舍（07215）");
+                    text2.setPromptText("[自设][not null]");
                     column3.setText("维修时间");
-                    text3.setPromptText("维修时间");
+                    text3.setPromptText("维修时间[not null]");
                     column4.setText("维修内容");
                     text4.setPromptText("维修内容");
                     column5.setVisible(true);
                     column5.setText("维修状态");
                     text5.setVisible(true);
-                    text5.setPromptText("维修状态");
+                    text5.setPromptText("维修状态[not null]");
                     column6.setVisible(false);
                     text6.setVisible(false);
                     column7.setVisible(false);
@@ -222,11 +220,11 @@ public class add {
                     break;
                 case "费用信息":
                     column1.setText("学号");
-                    text1.setPromptText("12位学号");
+                    text1.setPromptText("12位学号[not null]");
                     column2.setText("费用金额");
-                    text2.setPromptText("费用金额");
+                    text2.setPromptText("费用金额[not null]");
                     column3.setText("费用时间");
-                    text3.setPromptText("费用时间");
+                    text3.setPromptText("费用时间[not null]");
                     column4.setText("费用描述");
                     text4.setPromptText("【可选】费用描述");
                     column5.setVisible(false);
@@ -239,13 +237,13 @@ public class add {
                     break;
                 case "违规信息":
                     column1.setText("学号");
-                    text1.setPromptText("12位学号");
+                    text1.setPromptText("12位学号[not null]");
                     column2.setText("宿舍id");
-                    text2.setPromptText("【自设】楼号+宿舍（07215）");
+                    text2.setPromptText("[自设][not null]");
                     column3.setText("违规时间");
-                    text3.setPromptText("违规时间");
+                    text3.setPromptText("违规时间[not null]");
                     column4.setText("违规类型");
-                    text4.setPromptText("违规类型");
+                    text4.setPromptText("违规类型[not null]");
                     column5.setVisible(true);
                     column5.setText("违规内容");
                     text5.setVisible(true);
@@ -258,11 +256,11 @@ public class add {
                     break;
                 case "入住信息":
                     column1.setText("学号");
-                    text1.setPromptText("12位学号");
+                    text1.setPromptText("12位学号[not null]");
                     column2.setText("宿舍id");
-                    text2.setPromptText("【自设】楼号+宿舍（07215）");
+                    text2.setPromptText("[自设][not null]");
                     column3.setText("入住时间");
-                    text3.setPromptText("入住时间");
+                    text3.setPromptText("入住时间[not null]");
                     column4.setText("退宿时间");
                     text4.setPromptText("退宿时间");
                     column5.setVisible(false);

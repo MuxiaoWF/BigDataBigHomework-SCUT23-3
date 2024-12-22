@@ -11,12 +11,14 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class setDB {
     public static final String PATH = loginEncrypt.basic.desktopPath + "\\宿舍管理系统\\path";
+    private static final String USER = loginEncrypt.basic.desktopPath+"\\宿舍管理系统\\user";
     private final Stage primaryStage = Main.primaryStage;
     @FXML
     private TextField URL;
@@ -41,7 +43,7 @@ public class setDB {
             Main.URL = strings[0];
             Main.USER = strings[1];
             Main.PASSWORD = strings[2];
-            Connection connection = Main.getConnection();
+            Connection connection = DriverManager.getConnection(strings[0], strings[1], strings[2]);
             // 在后台线程中执行数据库操作
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.submit(Main.TableCreator::createTables);
@@ -54,20 +56,26 @@ public class setDB {
             Main.PASSWORD = "";
         } catch (IOException e) {
             File file = new File(PATH);
-            if (file.exists())
+            if (file.exists()){
                 file.delete();
+                new File(USER).delete();
+            }
             result.setText("设置失败！(写入文件失败)" + e);
             return;
         } catch (SQLException e) {
             File file = new File(PATH);
-            if (file.exists())
+            if (file.exists()){
                 file.delete();
+                new File(USER).delete();
+            }
             result.setText("设置失败！(数据库连接失败)" + e);
             return;
         } catch (Exception e) {
             File file = new File(PATH);
-            if (file.exists())
+            if (file.exists()){
                 file.delete();
+                new File(USER).delete();
+            }
             result.setText("设置失败！(未知错误)" + e);
             return;
         }
